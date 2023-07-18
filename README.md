@@ -2,6 +2,9 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+firebase reference:
+https://console.firebase.google.com/u/0/project/react-crown-project/overview
+
 ## Available Scripts
 
 In the project directory, you can run:
