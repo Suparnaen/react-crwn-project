@@ -5,7 +5,9 @@ import {
     signInWithPopup,
     signInWithRedirect,
     GoogleAuthProvider,
-    createUserWithEmailAndPassword
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut
 } from 'firebase/auth';
 
 //to use firestore, we need to import its libraries
@@ -60,10 +62,10 @@ export const createUserDocumentFromAuth = async (userAuth, additionalInformation
 
     const userDocRef = doc(db, 'users', userAuth.uid);//here 'users is a collection we are defining
 
-    console.log(userDocRef);
+    //console.log(userDocRef);
 
     const userSnapshot = await getDoc(userDocRef);//get the data for the userreference
-    console.log(userSnapshot);
+    //console.log(userSnapshot);
     console.log(userSnapshot.exists());
 
     if (!userSnapshot.exists()) {
@@ -89,3 +91,12 @@ export const createAuthUserWithEmailAndPassword = async (email, password) => {
 
 
 }
+
+export const signInAuthWithEmailAndPassword = async (email, password) => {
+    if (!email || !password) return;
+
+    return await signInWithEmailAndPassword(auth, email, password);
+
+}
+
+export const signOutUser = async () => await signOut(auth);
