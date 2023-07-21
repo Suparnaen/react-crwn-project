@@ -7,7 +7,8 @@ import {
     GoogleAuthProvider,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
-    signOut
+    signOut,
+    onAuthStateChanged,
 } from 'firebase/auth';
 
 //to use firestore, we need to import its libraries
@@ -100,3 +101,6 @@ export const signInAuthWithEmailAndPassword = async (email, password) => {
 }
 
 export const signOutUser = async () => await signOut(auth);
+
+//observation listener..auth changes when user signin, or signout
+export const onAuthStateChangedListener = (callback) => onAuthStateChanged(auth, callback);
