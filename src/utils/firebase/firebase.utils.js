@@ -16,7 +16,11 @@ import {
     getFirestore,
     doc,
     getDoc,
-    setDoc
+    setDoc,
+    collection,
+    writeBatch,
+    query,
+    getDocs,
 } from 'firebase/firestore';
 
 // Your web app's Firebase configuration
@@ -52,6 +56,43 @@ export const signInWithGooglePopup = () => signInWithPopup(auth, googleProvider)
 //create our firestoredb instance
 export const db = getFirestore();
 
+//to add data to firestore
+export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => {
+    const collectionRef = collection(db, collectionKey);
+
+    //create batch to add all our transaction in one
+    const batch = writeBatch(db);
+
+    objectsToAdd.forEach((object) => {
+        const docRef = doc(collectionRef, object.title.toLowerCase());
+
+        batch.set(docRef, object);
+    })
+    await batch.commit();
+    console.log('Done');
+
+};
+
+//to fetch data from firestore categories
+
+export const getCategoriesAndDocuments = async () => {
+    const collectionRef = collection(db, 'categories');
+
+    const q = query(collectionRef);
+
+    const querySnapshot = await getDocs(q);
+
+    const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
+        const { title, items } = docSnapshot.data();
+        acc[title.toLowerCase()] = items;
+
+        return acc;
+
+    }, {})
+
+    return categoryMap;
+
+}
 //get the user document
 // export const createUserDocumentFromAuth = async (userAuth) => {
 //     const userDocRef = doc(db, 'users', userAuth.uid);//here 'users is a collection we are defining
@@ -67,7 +108,7 @@ export const createUserDocumentFromAuth = async (userAuth, additionalInformation
 
     const userSnapshot = await getDoc(userDocRef);//get the data for the userreference
     //console.log(userSnapshot);
-    console.log(userSnapshot.exists());
+    //console.log(userSnapshot.exists());
 
     if (!userSnapshot.exists()) {
         const { displayName, email } = userAuth;
